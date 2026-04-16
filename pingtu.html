@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼图小游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .setup-section {
+            margin-bottom: 30px;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .difficulty-section {
+            margin: 20px 0;
+        }
+
+        .difficulty-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .difficulty-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .difficulty-btn:hover,
+        .difficulty-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-top: 20px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .start-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .game-section {
+            display: none;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .difficulty-display {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .puzzle-container {
+            display: grid;
+            gap: 2px;
+            background: #ddd;
+            padding: 2px;
+            border-radius: 10px;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        .puzzle-piece {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .puzzle-piece:hover {
+            transform: scale(0.98);
+        }
+
+        .puzzle-piece.selected {
+            box-shadow: 0 0 0 4px #667eea;
+            z-index: 10;
+        }
+
+        .puzzle-piece.correct {
+            box-shadow: inset 0 0 0 2px #4CAF50;
+        }
+
+        .puzzle-piece::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            pointer-events: none;
+        }
+
+        .puzzle-piece.correct::after {
+            border: 2px solid #4CAF50;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .restart-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .preview-btn {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .result-info {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .result-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .result-info .highlight {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1.2em;
+        }
+
+        .share-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .share-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .share-card .time {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .share-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .play-again-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .preview-modal .modal-content {
+            max-width: 600px;
+        }
+
+        .preview-modal img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .puzzle-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧩 拼图小游戏</h1>
+        
+        <!-- 设置区域 -->
+        <div class="setup-section" id="setupSection">
+            <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                <input type="file" id="imageInput" accept="image/*" onchange="handleImageUpload(event)">
+                <div class="upload-icon">📷</div>
+                <p>点击上传图片或拖拽图片到此处</p>
+                <p style="color: #999; font-size: 12px; margin-top: 10px;">支持 JPG、PNG 格式</p>
+                <img id="previewImage" class="preview-image" style="display: none;">
+            </div>
+
+            <div class="difficulty-section">
+                <label>选择难度：</label>
+                <div class="difficulty-options">
+                    <button class="difficulty-btn active" data-rows="3" data-cols="4">3×4 (简单)</button>
+                    <button class="difficulty-btn" data-rows="4" data-cols="4">4×4 (中等)</button>
+                    <button class="difficulty-btn" data-rows="4" data-cols="5">4×5 (困难)</button>
+                    <button class="difficulty-btn" data-rows="5" data-cols="5">5×5 (专家)</button>
+                    <button class="difficulty-btn" data-rows="6" data-cols="6">6×6 (大师)</button>
+                </div>
+            </div>
+
+            <button class="start-btn" id="startBtn" onclick="startGame()" disabled>开始游戏</button>
+        </div>
+
+        <!-- 游戏区域 -->
+        <div class="game-section" id="gameSection">
+            <div class="game-header">
+                <div class="timer" id="timer">00:00</div>
+                <div class="difficulty-display" id="difficultyDisplay">难度: 3×4</div>
+            </div>
+
+            <div class="puzzle-container" id="puzzleContainer"></div>
+
+            <div class="control-buttons">
+                <button class="control-btn restart-btn" onclick="restartGame()">重新开始</button>
+                <button class="control-btn preview-btn" onclick="showPreview()">查看原图</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 完成弹窗 -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-icon">🎉</div>
+            <h2>恭喜完成拼图！</h2>
+            <div class="result-info">
+                <p>难度: <span class="highlight" id="resultDifficulty">3×4</span></p>
+                <p>用时: <span class="highlight" id="resultTime">00:00</span></p>
+            </div>
+            <div class="share-card">
+                <h3>🎊 拼图挑战成功！</h3>
+                <p>难度: <span id="shareDifficulty">3×4</span></p>
+                <div class="time" id="shareTime">00:00</div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn share-btn" onclick="shareResult()">分享成绩</button>
+                <button class="modal-btn play-again-btn" onclick="playAgain()">再玩一次</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 预览弹窗 -->
+    <div class="modal preview-modal" id="previewModal" onclick="closePreview()">
+        <span class="close-btn">&times;</span>
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 style="margin-bottom: 15px;">原图预览</h3>
+            <img id="previewModalImage" src="" alt="原图">
+            <button class="modal-btn play-again-btn" style="margin-top: 15px;" onclick="closePreview()">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        let uploadedImage = null;
+        let selectedDifficulty = { rows: 3, cols: 4 };
+        let puzzlePieces = [];
+        let selectedPiece = null;
+        let timerInterval = null;
+        let startTime = null;
+        let isGameComplete = false;
+
+        // 处理图片上传
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImage = e.target.result;
+                    const preview = document.getElementById('previewImage');
+                    preview.src = uploadedImage;
+                    preview.style.display = 'block';
+                    document.getElementById('startBtn').disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 难度选择
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedDifficulty = {
+                    rows: parseInt(this.dataset.rows),
+                    cols: parseInt(this.dataset.cols)
+                };
+            });
+        });
+
+        // 开始游戏
+        function startGame() {
+            if (!uploadedImage) return;
+
+            document.getElementById('setupSection').style.display = 'none';
+            document.getElementById('gameSection').style.display = 'block';
+            document.getElementById('difficultyDisplay').textContent = `难度: ${selectedDifficulty.rows}×${selectedDifficulty.cols}`;
+
+            createPuzzle();
+            startTimer();
+        }
+
+        // 创建拼图
+        function createPuzzle() {
+            const container = document.getElementById('puzzleContainer');
+            container.innerHTML = '';
+            container.style.gridTemplateColumns = `repeat(${selectedDifficulty.cols}, 1fr)`;
+
+            const pieces = [];
+            const totalPieces = selectedDifficulty.rows * selectedDifficulty.cols;
+
+            // 创建拼图块
+            for (let i = 0; i < totalPieces; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'puzzle-piece';
+                piece.style.aspectRatio = '1';
+                piece.dataset.correctIndex = i;
+                piece.dataset.currentIndex = i;
+
+                const row = Math.floor(i / selectedDifficulty.cols);
+                const col = i % selectedDifficulty.cols;
+
+                piece.style.backgroundImage = `url(${uploadedImage})`;
+                piece.style.backgroundSize = `${selectedDifficulty.cols * 100}% ${selectedDifficulty.rows * 100}%`;
+                piece.style.backgroundPosition = `${col * (100 / (selectedDifficulty.cols - 1))}% ${row * (100 / (selectedDifficulty.rows - 1))}%`;
+
+                piece.addEventListener('click', () => handlePieceClick(piece));
+                pieces.push(piece);
+            }
+
+            // 打乱顺序
+            puzzlePieces = shuffleArray([...pieces]);
+            puzzlePieces.forEach((piece, index) => {
+                piece.dataset.currentIndex = index;
+                container.appendChild(piece);
+            });
+
+            // 检查初始状态
+            checkCorrectPieces();
+        }
+
+        // 打乱数组
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        // 处理拼图块点击
+        function handlePieceClick(piece) {
+            if (isGameComplete) return;
+
+            if (!selectedPiece) {
+                selectedPiece = piece;
+                piece.classList.add('selected');
+            } else if (selectedPiece === piece) {
+                piece.classList.remove('selected');
+                selectedPiece = null;
+            } else {
+                // 交换两个拼图块
+                swapPieces(selectedPiece, piece);
+                selectedPiece.classList.remove('selected');
+                selectedPiece = null;
+
+                // 检查是否正确
+                checkCorrectPieces();
+                checkGameComplete();
+            }
+        }
+
+        // 交换拼图块
+        function swapPieces(piece1, piece2) {
+            const container = document.getElementById('puzzleContainer');
+            const index1 = puzzlePieces.indexOf(piece1);
+            const index2 = puzzlePieces.indexOf(piece2);
+
+            // 交换数组中的位置
+            [puzzlePieces[index1], puzzlePieces[index2]] = [puzzlePieces[index2], puzzlePieces[index1]];
+
+            // 更新DOM
+            const temp = document.createElement('div');
+            container.insertBefore(temp, piece1);
+            container.insertBefore(piece1, piece2);
+            container.insertBefore(piece2, temp);
+            container.removeChild(temp);
+
+            // 更新索引
+            piece1.dataset.currentIndex = index2;
+            piece2.dataset.currentIndex = index1;
+        }
+
+        // 检查正确的拼图块
+        function checkCorrectPieces() {
+            puzzlePieces.forEach((piece, index) => {
+                const correctIndex = parseInt(piece.dataset.correctIndex);
+                if (index === correctIndex) {
+                    piece.classList.add('correct');
+                } else {
+                    piece.classList.remove('correct');
+                }
+            });
+        }
+
+        // 检查游戏是否完成
+        function checkGameComplete() {
+            const isComplete = puzzlePieces.every((piece, index) => {
+                return parseInt(piece.dataset.correctIndex) === index;
+            });
+
+            if (isComplete) {
+                isGameComplete = true;
+                stopTimer();
+                showSuccessModal();
+            }
+        }
+
+        // 计时器
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        // 显示成功弹窗
+        function showSuccessModal() {
+            const time = document.getElementById('timer').textContent;
+            document.getElementById('resultDifficulty').textContent = `${selectedDifficulty.rows}×${selectedDifficulty.cols}`;
+            document.getElementById('resultTime').textContent = time;
+            document.getElementById('shareDifficulty').textContent = `${selectedDifficulty.rows}×${selectedDifficulty.cols}`;
+            document.getElementById('shareTime').textContent = time;
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        // 分享成绩
+        function shareResult() {
+            const time = document.getElementById('timer').textContent;
+            const difficulty = `${selectedDifficulty.rows}×${selectedDifficulty.cols}`;
+            const shareText = `🎉 我在拼图游戏中完成了 ${difficulty} 难度的挑战！\n⏱️ 用时: ${time}\n🧩 快来挑战我吧！`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '拼图游戏成绩',
+                    text: shareText
+                });
+            } else {
+                // 复制到剪贴板
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('成绩已复制到剪贴板！');
+                });
+            }
+        }
+
+        // 再玩一次
+        function playAgain() {
+            document.getElementById('successModal').style.display = 'none';
+            document.getElementById('gameSection').style.display = 'none';
+            document.getElementById('setupSection').style.display = 'block';
+            isGameComplete = false;
+            selectedPiece = null;
+            stopTimer();
+            document.getElementById('timer').textContent = '00:00';
+        }
+
+        // 重新开始当前游戏
+        function restartGame() {
+            isGameComplete = false;
+            selectedPiece = null;
+            stopTimer();
+            document.getElementById('timer').textContent = '00:00';
+            createPuzzle();
+            startTimer();
+        }
+
+        // 显示原图预览
+        function showPreview() {
+            document.getElementById('previewModalImage').src = uploadedImage;
+            document.getElementById('previewModal').style.display = 'flex';
+        }
+
+        // 关闭预览
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+
+        // 拖拽上传
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#764ba2';
+            uploadArea.style.background = '#f0f2ff';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.background = '#f8f9ff';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#667eea';
+            uploadArea.style.background = '#f8f9ff';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedImage = e.target.result;
+                        const preview = document.getElementById('previewImage');
+                        preview.src = uploadedImage;
+                        preview.style.display = 'block';
+                        document.getElementById('startBtn').disabled = false;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

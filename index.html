@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蔡姝婧 | 个人主页</title>
+    <!-- Tailwind CSS v3.0+ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#d4af37',
+                        secondary: '#fef9e7',
+                        dark: '#333333',
+                        light: '#fefdf8',
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .transition-all-300 {
+                transition: all 300ms ease-in-out;
+            }
+            .gold-gradient {
+                background: linear-gradient(135deg, #fef9e7 0%, #fdf5e6 100%);
+            }
+            .gold-border {
+                border: 1px solid rgba(212, 175, 55, 0.3);
+            }
+            .gold-shadow {
+                box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
+            }
+        }
+    </style>
+</head>
+<body class="bg-light font-sans text-dark bg-[url('https://picsum.photos/1920/1080?random=5')] bg-cover bg-fixed bg-center">
+    <!-- 背景覆盖层 -->
+    <div class="fixed inset-0 bg-white/90 z-0"></div>
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-primary/20">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-primary text-2xl font-semibold">蔡姝婧</span>
+                <span class="text-gray-500 text-sm">个人主页</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-gray-700 hover:text-primary transition-all-300">关于我</a>
+                <a href="#projects" class="text-gray-700 hover:text-primary transition-all-300">作品</a>
+                <a href="#contact" class="text-gray-700 hover:text-primary transition-all-300">联系方式</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-primary/20">
+            <div class="container mx-auto px-4 py-2 flex flex-col space-y-3">
+                <a href="#about" class="text-gray-700 hover:text-primary py-2 transition-all-300">关于我</a>
+                <a href="#projects" class="text-gray-700 hover:text-primary py-2 transition-all-300">作品</a>
+                <a href="#contact" class="text-gray-700 hover:text-primary py-2 transition-all-300">联系方式</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <header class="pt-24 pb-16 md:pt-32 md:pb-24 gold-gradient relative z-10">
+        <div class="container mx-auto px-4 flex flex-col items-center text-center">
+            <div class="w-32 h-32 rounded-full overflow-hidden mb-6 border-4 border-white gold-shadow">
+                <img src="https://picsum.photos/1920/1080?random=1" alt="蔡姝婧" class="w-full h-full object-cover">
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-primary">蔡姝婧</h1>
+            <p class="text-xl md:text-2xl text-gray-600 mb-8">个人主页</p>
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <span class="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm">专业背景</span>
+                <span class="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm">个人成就</span>
+                <span class="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm">联系方式</span>
+            </div>
+            <a href="#contact" class="bg-primary text-white px-6 py-3 rounded-full font-medium hover:bg-primary/90 transition-all-300">
+                联系我
+            </a>
+        </div>
+    </header>
+
+    <!-- 关于我 -->
+    <section id="about" class="py-16 bg-white relative z-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center text-primary">关于我</h2>
+            <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl gold-border gold-shadow">
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-primary">个人简介</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        蔡姝婧，专注于个人发展与专业领域的探索，追求卓越与创新。
+                    </p>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        致力于在自己的专业领域中不断突破，创造有价值的成果。
+                    </p>
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4 text-primary">成就</h3>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                            <span>专业领域的突出贡献</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                            <span>个人品牌的建立与发展</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                            <span>行业内的认可与赞誉</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                            <span>持续学习与自我提升</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                            <span>积极参与行业交流与合作</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品 -->
+    <section id="projects" class="py-16 gold-gradient relative z-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center text-primary">作品</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 项目1 -->
+                <div class="bg-white rounded-xl overflow-hidden gold-border gold-shadow hover:gold-shadow transition-all-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/1920/1080?random=2" alt="项目1" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">项目一</h3>
+                        <p class="text-gray-600 mb-4">专业领域的代表性作品，展示个人能力与创意。</p>
+                        <a href="#" class="text-primary font-medium hover:underline flex items-center">
+                            查看详情
+                            <i class="fa fa-external-link ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- 项目2 -->
+                <div class="bg-white rounded-xl overflow-hidden gold-border gold-shadow hover:gold-shadow transition-all-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/1920/1080?random=3" alt="项目2" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">项目二</h3>
+                        <p class="text-gray-600 mb-4">创新实践与专业技能的综合体现。</p>
+                        <a href="#" class="text-primary font-medium hover:underline flex items-center">
+                            查看详情
+                            <i class="fa fa-external-link ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- 项目3 -->
+                <div class="bg-white rounded-xl overflow-hidden gold-border gold-shadow hover:gold-shadow transition-all-300">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/1920/1080?random=4" alt="项目3" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 text-primary">项目三</h3>
+                        <p class="text-gray-600 mb-4">跨领域合作与创新思维的成果展示。</p>
+                        <a href="#" class="text-primary font-medium hover:underline flex items-center">
+                            查看详情
+                            <i class="fa fa-external-link ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section id="contact" class="py-16 bg-white relative z-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center text-primary">联系方式</h2>
+            <div class="max-w-2xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 社交账号 -->
+                    <div class="bg-white rounded-xl p-6 gold-border gold-shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-primary">社交账号</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                    <i class="fa fa-weixin text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">微信</p>
+                                    <p class="font-medium">个人微信</p>
+                                </div>
+                            </li>
+                            <li class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                    <i class="fa fa-envelope text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">邮箱</p>
+                                    <p class="font-medium">contact@example.com</p>
+                                </div>
+                            </li>
+                            <li class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                    <i class="fa fa-phone text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">电话</p>
+                                    <p class="font-medium">+86 123 4567 8910</p>
+                                </div>
+                            </li>
+                            <li class="flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                                    <i class="fa fa-linkedin text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">LinkedIn</p>
+                                    <p class="font-medium">linkedin.com/in/cai</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 联系表单 -->
+                    <div class="bg-white rounded-xl p-6 gold-border gold-shadow">
+                        <h3 class="text-xl font-semibold mb-4 text-primary">发送消息</h3>
+                        <form class="space-y-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">姓名</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">消息</label>
+                                <textarea id="message" rows="4" class="w-full px-4 py-2 border border-primary/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary/90 transition-all-300">
+                                发送
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-8 bg-primary/10 text-primary relative z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p class="text-sm text-primary/80">© 2026 蔡姝婧 | 个人主页</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-primary/60 hover:text-primary transition-all-300">
+                        <i class="fa fa-weixin"></i>
+                    </a>
+                    <a href="#" class="text-primary/60 hover:text-primary transition-all-300">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a href="#" class="text-primary/60 hover:text-primary transition-all-300">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="text-primary/60 hover:text-primary transition-all-300">
+                        <i class="fa fa-globe"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    // 关闭移动端菜单
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
