@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="bitbug_favicon.ico" type="image/x-icon">
     <title>拼图小游戏</title>
     <style>
         * {
@@ -38,14 +39,68 @@
             margin-bottom: 30px;
         }
 
+        .default-images {
+            margin-bottom: 30px;
+        }
+
+        .default-images h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .image-selection-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .default-images-grid {
+            display: contents;
+        }
+
+        .default-image-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .default-image-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .default-image-item.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+
+        .default-image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .upload-area {
+            position: relative;
             border: 3px dashed #667eea;
             border-radius: 15px;
-            padding: 40px;
+            padding: 0;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             background: #f8f9ff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            height: 100%;
+            overflow: hidden;
         }
 
         .upload-area:hover {
@@ -57,10 +112,66 @@
             display: none;
         }
 
+        .upload-area.hidden {
+            display: none;
+        }
+
+        .upload-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-content.hidden {
+            display: none;
+        }
+
         .upload-icon {
             font-size: 48px;
             color: #667eea;
             margin-bottom: 10px;
+        }
+
+        /* 横长条上传区域 */
+        .upload-bar {
+            margin-top: 15px;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 12px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9ff;
+        }
+
+        .upload-bar:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-bar input {
+            display: none;
+        }
+
+        .upload-bar-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .upload-bar-icon {
+            font-size: 20px;
+        }
+
+        .upload-bar-text {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 500;
         }
 
         .preview-image {
@@ -226,6 +337,11 @@
             color: #333;
         }
 
+        .back-btn {
+            background: #ff9800;
+            color: white;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -360,12 +476,32 @@
         
         <!-- 设置区域 -->
         <div class="setup-section" id="setupSection">
-            <div class="upload-area" onclick="document.getElementById('imageInput').click()">
-                <input type="file" id="imageInput" accept="image/*" onchange="handleImageUpload(event)">
-                <div class="upload-icon">📷</div>
-                <p>点击上传图片或拖拽图片到此处</p>
-                <p style="color: #999; font-size: 12px; margin-top: 10px;">支持 JPG、PNG 格式</p>
-                <img id="previewImage" class="preview-image" style="display: none;">
+            <!-- 图片选择区域 -->
+            <div class="default-images">
+                <h3>选择图片或上传图片开始游戏</h3>
+                <div class="image-selection-container">
+                    <div class="default-image-item" onclick="selectDefaultImage('pingtu1.png', this)">
+                        <img src="pingtu1.png" alt="拼图1">
+                    </div>
+                    <div class="default-image-item" onclick="selectDefaultImage('pingtu2.jpg', this)">
+                        <img src="pingtu2.jpg" alt="拼图2">
+                    </div>
+                    <div class="default-image-item" onclick="selectDefaultImage('pingtu3.jpeg', this)">
+                        <img src="pingtu3.jpeg" alt="拼图3">
+                    </div>
+                    <div class="default-image-item" id="uploadedImageContainer" onclick="selectDefaultImage(uploadedImage, this)" style="display: none;">
+                        <img id="uploadedImageDisplay" src="" alt="上传的图片">
+                    </div>
+                </div>
+                
+                <!-- 上传区域 - 横长条 -->
+                <div class="upload-bar" id="uploadBar" onclick="document.getElementById('imageInput').click()">
+                    <input type="file" id="imageInput" accept="image/*" onchange="handleImageUpload(event)">
+                    <div class="upload-bar-content">
+                        <span class="upload-bar-icon">📷</span>
+                        <span class="upload-bar-text">点击上传自己的图片</span>
+                    </div>
+                </div>
             </div>
 
             <div class="difficulty-section">
@@ -394,6 +530,7 @@
             <div class="control-buttons">
                 <button class="control-btn restart-btn" onclick="restartGame()">重新开始</button>
                 <button class="control-btn preview-btn" onclick="showPreview()">查看原图</button>
+                <button class="control-btn back-btn" onclick="backToSelection()">返回选择图片</button>
             </div>
         </div>
     </div>
@@ -445,13 +582,38 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     uploadedImage = e.target.result;
-                    const preview = document.getElementById('previewImage');
-                    preview.src = uploadedImage;
-                    preview.style.display = 'block';
+                    
+                    // 在第4个格子显示上传的图片
+                    const uploadedImageDisplay = document.getElementById('uploadedImageDisplay');
+                    uploadedImageDisplay.src = uploadedImage;
+                    document.getElementById('uploadedImageContainer').style.display = 'block';
+                    
+                    // 清除默认图片选中状态并选中新上传的图片
+                    clearDefaultImageSelection();
+                    document.getElementById('uploadedImageContainer').classList.add('selected');
+                    
                     document.getElementById('startBtn').disabled = false;
                 };
                 reader.readAsDataURL(file);
             }
+        }
+
+        // 选择默认图片
+        function selectDefaultImage(imageSrc, element) {
+            document.querySelectorAll('.default-image-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            uploadedImage = imageSrc;
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        // 清除默认图片选中状态
+        function clearDefaultImageSelection() {
+            document.querySelectorAll('.default-image-item').forEach(item => {
+                item.classList.remove('selected');
+            });
         }
 
         // 难度选择
@@ -644,6 +806,16 @@
         // 再玩一次
         function playAgain() {
             document.getElementById('successModal').style.display = 'none';
+            document.getElementById('gameSection').style.display = 'none';
+            document.getElementById('setupSection').style.display = 'block';
+            isGameComplete = false;
+            selectedPiece = null;
+            stopTimer();
+            document.getElementById('timer').textContent = '00:00';
+        }
+
+        // 返回选择图片
+        function backToSelection() {
             document.getElementById('gameSection').style.display = 'none';
             document.getElementById('setupSection').style.display = 'block';
             isGameComplete = false;
